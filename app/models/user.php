@@ -28,8 +28,8 @@ class User extends Model
 
     public function findUsers($name, $surname)
     {
-        $name = '%'.$name.'%';
-        $surname = '%'.$surname.'%';
+        $name = $name.'%';
+        $surname = $surname.'%';
         $result = $this->connection->prepare('SELECT * FROM ' . $this->table . ' WHERE `name` LIKE :name AND `surname` LIKE :surname ORDER BY id ASC;');
         $result->bindParam(':name', $name);
         $result->bindParam(':surname', $surname);

@@ -86,12 +86,19 @@ class Controller_User extends Controller
         $page = 1;
         $name = '';
         $surname = '';
-        if ($_SERVER['REQUEST_METHOD'] === 'GET' ) { // && isset($_COOKIE['auth'])
-            if (isset($_GET['name']) && isset($_GET['surname'])) {
-                $name = $_GET['name'];
-                $surname = $_GET['surname'];
-                $users = $this->model->findUsers($name, $surname);
+        $urlParts = explode('/', $_SERVER['REQUEST_URI']);
+        if (isset($urlParts[3]) && isset($urlParts[4])) {
+            $name = urldecode($urlParts[3]);
+            $surname = urldecode($urlParts[4]);
+        }
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' ) { // && isset($_COOKIE['auth'])
+            if (isset($_POST['name']) && isset($_POST['surname'])) {
+                $name = $_POST['name'];
+                $surname = $_POST['surname'];
             }
+        }
+        if (!empty($name) && !empty($surname)) {
+            $users = $this->model->findUsers($name, $surname);
         }
 
         $this->view->generate('user/find.php', 'template_view.php', ['users' => $users, 'page' => $page, 'name' => $name, 'surname' => $surname] );
