@@ -25,6 +25,9 @@
                     <a class="nav-link" href="/user/friends">Друзья</a>
                 </li>
             <?php endif; ?>
+            <li class="nav-item">
+                <a class="nav-link" href="/user/find">Поиск</a>
+            </li>
         </ul>
         <div class="form-inline my-2 my-lg-0">
             <?php if ( isset($_COOKIE['auth'])): ?>

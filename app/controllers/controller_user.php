@@ -10,16 +10,16 @@ class Controller_User extends Controller
 {
     function __construct()
     {
-        if (!isset($_COOKIE['auth'])) {
-            header("Location: /?message=Вы не авторизованы!");
-            die();
-        }
         $this->model = new User();
         $this->view = new View();
     }
 
     public function action_profile()
     {
+        if (!isset($_COOKIE['auth'])) {
+            header("Location: /?message=Вы не авторизованы!");
+            die();
+        }
         $currentUser = [];
         $isCurrentUser = false;
         $isFriend = false;
@@ -70,12 +70,32 @@ class Controller_User extends Controller
 
     public function action_friends()
     {
+        if (!isset($_COOKIE['auth'])) {
+            header("Location: /?message=Вы не авторизованы!");
+            die();
+        }
         $currentUser = $this->model->getCurrentUser();
         $friends = $this->model->getUserFriends($currentUser['id']);
 
         $this->view->generate('user/friends.php', 'template_view.php', ['friends' => $friends] );
     }
 
+    public function action_find()
+    {
+        $users = [];
+        $page = 1;
+        $name = '';
+        $surname = '';
+        if ($_SERVER['REQUEST_METHOD'] === 'GET' ) { // && isset($_COOKIE['auth'])
+            if (isset($_GET['name']) && isset($_GET['surname'])) {
+                $name = $_GET['name'];
+                $surname = $_GET['surname'];
+                $users = $this->model->findUsers($name, $surname);
+            }
+        }
+
+        $this->view->generate('user/find.php', 'template_view.php', ['users' => $users, 'page' => $page, 'name' => $name, 'surname' => $surname] );
+    }
 
 
 }

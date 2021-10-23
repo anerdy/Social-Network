@@ -2,7 +2,26 @@
     <div class="row">
         <div class="col-md-12">
 
-            <h1>Социальная сеть</h1>
+            <h1>Поиск</h1>
+
+
+                <form action="#" method="get">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="name">Имя</label>
+                                <input type="text" class="form-control" id="name" name="name" placeholder="Имя" value="<?= $data['name'] ?>">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="surname">Фамилия</label>
+                                <input type="text" class="form-control" id="surname" name="surname" placeholder="Фамилия" value="<?= $data['surname'] ?>">
+                            </div>
+                        </div>
+                    <button type="submit" class="btn btn-primary">Найти</button>
+                    </div>
+                </form>
 
             <p>
                 <?php if ( ! empty($data['users']) ): ?>
@@ -24,11 +43,8 @@
                                 <td><?= htmlentities($user['name']); ?></td>
                                 <td><?= htmlentities($user['surname']); ?></td>
                                 <td><?= htmlentities($user['age']); ?></td>
-                                <td><?php if (isset($data['currentUser']) && !empty($data['currentUser']) && $user['id'] == $data['currentUser']['id'] ): ?>
-                                        <a href="/user/profile">Ваша страница</a>
-                                    <?php else: ?>
-                                        <a href="/user/profile?id=<?= $user['id']; ?>">Посмотреть профиль</a>
-                                    <?php endif; ?>
+                                <td>
+                                    <a href="/user/profile?id=<?= $user['id']; ?>">Посмотреть профиль</a>
                                 </td>
                             </tr>
                         <?php $num++; endforeach; ?>
@@ -38,11 +54,11 @@
             <p>Страница <?= $data['page']; ?></p>
             <p><?php $prev = $data['page'] > 1 ? $data['page']-1 : 0; ?>
                 <?php if ( $prev > 0 ): ?>
-                    <a href="/?page=<?= $prev; ?>">Назад</a>
+                    <a href="/user/find?page=<?= $prev; ?>">Назад</a>
                 <?php endif; ?> |
                 <?php $next = $data['page']+1; ?>
                 <?php if ( $next > 0 ): ?>
-                    <a href="/?page=<?= $next; ?>">Вперед</a>
+                    <a href="/user/find?page=<?= $next; ?>">Вперед</a>
                 <?php endif; ?>
             </p>
                 <?php else: ?>

@@ -14,15 +14,43 @@ class User extends Model
     ];
 
 
-    public function getUsers()
+    public function getUsers($count = 50, $offset = 0)
     {
-        $result = $this->connection->prepare('SELECT * FROM ' . $this->table . ';');
+        $result = $this->connection->prepare('SELECT * FROM ' . $this->table . ' ORDER BY id ASC LIMIT ' . $count . ' OFFSET ' . $offset . ' ;');
         $result->execute();
 
         if ($result->rowCount() > 0) {
             return $result->fetchAll(\PDO::FETCH_ASSOC);
         } else {
             return false;
+        }
+    }
+
+    public function findUsers($name, $surname)
+    {
+        $name = '%'.$name.'%';
+        $surname = '%'.$surname.'%';
+        $result = $this->connection->prepare('SELECT * FROM ' . $this->table . ' WHERE `name` LIKE :name AND `surname` LIKE :surname ORDER BY id ASC;');
+        $result->bindParam(':name', $name);
+        $result->bindParam(':surname', $surname);
+        $result->execute();
+
+        if ($result->rowCount() > 0) {
+            return $result->fetchAll(\PDO::FETCH_ASSOC);
+        } else {
+            return false;
+        }
+    }
+
+    public function getUsersCount()
+    {
+        $result = $this->connection->prepare('SELECT * FROM ' . $this->table . ';');
+        $result->execute();
+
+        if ($result->rowCount() > 0) {
+            return $result->rowCount();
+        } else {
+            return 0;
         }
     }
 
@@ -180,7 +208,6 @@ class User extends Model
             $result->bindParam(':interests', $interests);
             $result->bindParam(':city', $city);
             $result->execute();
-
         } catch (\Exception $exception) {
             header("Location: /auth/register?message=Ошибка сохранения!");
             die();
